@@ -13,6 +13,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.testing.Test
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JvmVendorSpec
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.creating
 import org.gradle.kotlin.dsl.getValue
@@ -33,7 +34,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 internal class ConventionPlugin : Plugin<Project> {
     override fun apply(project: Project) = with(project) {
         // apply dokka plugin
-        pluginManager.apply(DokkaPlugin::class.java)
+        pluginManager.apply(DokkaPlugin::class)
 
         if (rootProject == this) {
             configureRootProject()
@@ -53,7 +54,7 @@ private fun Project.configureRootProject() {
     }
 
     // configure compatibility validator
-    pluginManager.apply(BinaryCompatibilityValidatorPlugin::class.java)
+    pluginManager.apply(BinaryCompatibilityValidatorPlugin::class)
 }
 
 private fun Project.configureSubproject() {
@@ -75,7 +76,7 @@ private fun Project.configureSubproject() {
     }
 
     // configure detekt
-    pluginManager.apply(DetektPlugin::class.java)
+    pluginManager.apply(DetektPlugin::class)
     dependencies.add("detektPlugins", the<LibrariesForLibs>().plugin.detektFormatting)
     plugins.withType<DetektPlugin> {
         extensions.configure<DetektExtension> {
@@ -105,7 +106,7 @@ private fun Project.configureSubproject() {
     }
 
     // configure publishing
-    pluginManager.apply(MavenPublishPlugin::class.java)
+    pluginManager.apply(MavenPublishPlugin::class)
     extensions.configure<MavenPublishBaseExtension> {
         publishToMavenCentral(SonatypeHost.S01, automaticRelease = true)
         signAllPublications()
